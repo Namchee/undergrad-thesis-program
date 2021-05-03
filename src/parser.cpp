@@ -82,7 +82,7 @@ MovementData parse_data(
 
         for (auto const id: id_list) {
             if (id_frame.find(id) == id_frame.end()) {
-                trajectory_map[id].push_back({ -1, -1 });
+                trajectory_map[id].push_back({ std::nan(""), std::nan("") });
             }
         }
 

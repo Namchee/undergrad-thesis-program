@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "io.h"
 #include "parser.h"
+#include <cmath>
 #include <vector>
 #include <set>
 #include <unordered_map>
@@ -49,7 +50,7 @@ bool on_interval(
     };
 
     for (size_t t_itr = 0; t_itr < trajectory.size(); t_itr++) {
-        if (trajectory[t_itr][0] == -1) {
+        if (std::isnan(trajectory[t_itr][0])) {
             return false;
         }
     }
@@ -236,7 +237,7 @@ void extend_current_rombongan(
             // similarity checking when two entities
             // doesn't appear in the current timeframe.
             is_similar_to_all_members = member_id != other.id && 
-                dtw_distance != -1 &&
+                !std::isnan(dtw_distance) &&
                 dtw_distance <= r &&
                 cosine_similarity >= cs;
 
@@ -350,7 +351,11 @@ std::vector<Rombongan> identify_rombongan(
                     direction_vector[curr.id]
                 );
 
-                if (dtw_distance != -1 && dtw_distance <= r && cosine_similarity >= cs) {
+                if (
+                    !std::isnan(dtw_distance) &&
+                    dtw_distance <= r &&
+                    cosine_similarity >= cs
+                ) {
                     group_ids.push_back({ curr.id, other.id });
                 }
             }

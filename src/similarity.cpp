@@ -26,8 +26,8 @@ double calculate_euclidean_distance(
 
     for (size_t it = 0; it < a.size(); it++) {
         // return immediately when one of the position is not recorded
-        if (a[it] == -1 || b[it] == -1) {
-            return -1;
+        if (std::isnan(a[it]) || std::isnan(b[it])) {
+            return std::nan("");
         }
 
         distance += pow(a[it] - b[it], 2);
@@ -79,8 +79,8 @@ double calculate_dtw_distance(
             );
 
             // return immediately when trajectory isn't recorded
-            if (cost == -1) {
-                return -1;
+            if (std::isnan(cost)) {
+                return std::nan("");
             }
 
             double min = std::min(
@@ -122,8 +122,8 @@ double calculate_cosine_similarity(
 
     for (size_t itr = 0; itr < a.size(); itr++) {
         // return immediately when one of the position is not recorded
-        if (a[itr] == -1 || b[itr] == -1) {
-            return -1;
+        if (std::isnan(a[itr]) || std::isnan(b[itr])) {
+            return std::nan("");
         }
 
         dot_product += a[itr] * b[itr];
