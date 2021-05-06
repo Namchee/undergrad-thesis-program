@@ -3,22 +3,23 @@
 #include <string>
 #include <vector>
 #include <cassert>
+#include <cmath>
 #include <iostream>
 #include <map>
 #include <stdexcept>
 #include <limits>
 
 std::vector<std::vector<double> > b_trajectory{
-    { std::numeric_limits<double>::max(), std::numeric_limits<double>::max() },
-    { std::numeric_limits<double>::max(), std::numeric_limits<double>::max() },
+    { std::nan(""), std::nan("") },
+    { std::nan(""), std::nan("") },
     { 1.5, 1.5 },
-    { std::numeric_limits<double>::max(), std::numeric_limits<double>::max() }
+    { std::nan(""), std::nan("") }
 };
 
 std::vector<std::vector<double> > a_trajectory{
     { 1.0, 1.0 },
     { 2.0, 2.0 },
-    { std::numeric_limits<double>::max(), std::numeric_limits<double>::max() },
+    { std::nan(""), std::nan("") },
     { 3.0, 5.55 }
 };
 
@@ -36,9 +37,33 @@ void data_should_parse_correctly() {
 
     for (unsigned int i = 0; i < entities.size(); i++) {
         if (entities[i].id == 2) {
-            assert(entities[i].trajectories == b_trajectory);
+            for (unsigned int j = 0; j < entities[i].trajectories.size(); j++) {
+                if (std::isnan(entities[i].trajectories[j][0])) {
+                    assert(std::isnan(b_trajectory[j][0]));
+                } else {
+                    assert(entities[i].trajectories[j][0] == b_trajectory[j][0]);
+                }
+                
+                if (std::isnan(entities[i].trajectories[j][1])) {
+                    assert(std::isnan(b_trajectory[j][1]));
+                } else {
+                    assert(entities[i].trajectories[j][1] == b_trajectory[j][1]);
+                }
+            }
         } else {
-            assert(entities[i].trajectories == a_trajectory);
+            for (unsigned int j = 0; j < entities[i].trajectories.size(); j++) {
+                if (std::isnan(entities[i].trajectories[j][0])) {
+                    assert(std::isnan(a_trajectory[j][0]));
+                } else {
+                    assert(entities[i].trajectories[j][0] == a_trajectory[j][0]);
+                }
+                
+                if (std::isnan(entities[i].trajectories[j][1])) {
+                    assert(std::isnan(a_trajectory[j][1]));
+                } else {
+                    assert(entities[i].trajectories[j][1] == a_trajectory[j][1]);
+                }
+            }
         }
     }
 }
@@ -78,7 +103,9 @@ void expected_should_throw_an_error_if_file_not_found() {
 
 int main() {
     data_should_parse_correctly();
-    data_should_throw_an_error_if_file_not_found();
+    // data_should_throw_an_error_if_file_not_found();
+    // expected_should_parse_correctly();
+    // expected_should_throw_an_error_if_file_not_found();
 
     return 0;
 }

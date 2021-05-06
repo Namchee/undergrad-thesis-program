@@ -1,4 +1,4 @@
-#include "similarity.h"
+#include "spatial.h"
 #include <vector>
 #include <cassert>
 #include <stdexcept>

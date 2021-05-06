@@ -13,10 +13,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include_directories(./include ./src ./test ./libs/argparse/include)
 
-set(SOURCES ${SOURCE_DIR}/utils.h ${SOURCE_DIR}/utils.cpp ${SOURCE_DIR}/eval.h ${SOURCE_DIR}/eval.cpp ${SOURCE_DIR}/similarity.cpp ${SOURCE_DIR}/similarity.h ${SOURCE_DIR}/parser.cpp ${SOURCE_DIR}/parser.h ${SOURCE_DIR}/rombongan.cpp ${SOURCE_DIR}/io.h ${SOURCE_DIR}/io.cpp ./include/rombongan.h ./include/entity.h)
+set(SOURCES ${SOURCE_DIR}/utils.h ${SOURCE_DIR}/utils.cpp ${SOURCE_DIR}/eval.h ${SOURCE_DIR}/eval.cpp ${SOURCE_DIR}/spatial.cpp ${SOURCE_DIR}/spatial.h ${SOURCE_DIR}/parser.cpp ${SOURCE_DIR}/parser.h ${SOURCE_DIR}/rombongan.cpp ${SOURCE_DIR}/io.h ${SOURCE_DIR}/io.cpp ./include/rombongan.h ./include/entity.h)
 
 add_executable(main ${SOURCE_DIR}/main.cpp ${SOURCES})
-add_executable(test-similarity ${TEST_DIR}/test-similarity.cpp ${SOURCE_DIR}/similarity.h ${SOURCE_DIR}/similarity.cpp)
+add_executable(test-spatial ${TEST_DIR}/test-spatial.cpp ${SOURCE_DIR}/spatial.h ${SOURCE_DIR}/spatial.cpp)
 add_executable(test-i ${TEST_DIR}/io/test-i.cpp ${SOURCE_DIR}/io.h ${SOURCE_DIR}/io.cpp ${SOURCE_DIR}/utils.h ${SOURCE_DIR}/utils.cpp)
 add_executable(test-i-path ${TEST_DIR}/io/test-i-path.cpp ${SOURCE_DIR}/io.h ${SOURCE_DIR}/io.cpp ${SOURCE_DIR}/utils.h ${SOURCE_DIR}/utils.cpp)
 add_executable(test-i-exception-minimum-entity ${TEST_DIR}/io/test-i-exception-minimum-entity.cpp ${SOURCE_DIR}/io.h ${SOURCE_DIR}/io.cpp ${SOURCE_DIR}/utils.h ${SOURCE_DIR}/utils.cpp)
@@ -32,8 +32,8 @@ target_link_libraries(main argparse)
 enable_testing()
 
 # unit test for dynamic time warping algorithm
-add_test(NAME DTWAlgorithm COMMAND test-similarity dtw)
-add_test(NAME CosineSimilarity COMMAND test-similarity cosine)
+add_test(NAME DTWAlgorithm COMMAND test-spatial dtw)
+add_test(NAME CosineSimilarity COMMAND test-spatial cosine)
 add_test(NAME Input COMMAND test-i seq_eth 3 10 0.15 0.0)
 add_test(NAME InputPath COMMAND test-i-path seq_eth 3 10 0.15 1.0 -p=abc)
 add_test(NAME InputExceptionMinimumEntity COMMAND test-i-exception-minimum-entity seq_eth 1 2 3.0 1.0)
