@@ -5,11 +5,10 @@
 #include <vector>
 #include <string>
 
-class MovementData {
-public:
+typedef struct MovementData {
     std::vector<Entity> entities;
     std::vector<double> frames;
-};
+} MovementData;
 
 class Parameter {
 public:

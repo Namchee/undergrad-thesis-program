@@ -4,10 +4,9 @@
 #include "rombongan.h"
 #include <vector>
 
-class Score {
-public:
+typedef struct Score {
     double precision, recall, f1_score;
-};
+} Score;
 
 Score calculate_score(
     const std::vector<std::vector<unsigned int> >&,

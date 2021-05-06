@@ -3,15 +3,14 @@
 
 #include "entity.h"
 #include <vector>
-class Rombongan {
-public:
+typedef struct Rombongan {
     std::vector<unsigned int> members;
     std::vector<std::pair<unsigned int, unsigned int> > duration;
 
     bool operator<(const Rombongan& other) const {
         return members.size() > other.members.size();
     }
-};
+} Rombongan;
 
 class Parameter;
 

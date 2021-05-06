@@ -1,17 +1,15 @@
 #ifndef io
 #define io
 
+#include "eval.h"
+#include "rombongan.h"
 #include <vector>
 #include <string>
-
-class Rombongan;
-class Score;
 
 /**
  * Parameters to be used when identifying rombongan from trajectory data.
  */
-class Arguments {
-public:
+typedef struct Arguments {
     std::string source;
     std::string path;
     unsigned int entities;
@@ -19,7 +17,7 @@ public:
     double range;
     double angle;
     double fps;
-};
+} Arguments;
 
 Arguments read_arguments(int, char *[]);
 
