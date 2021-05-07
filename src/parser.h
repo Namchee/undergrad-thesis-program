@@ -1,6 +1,7 @@
 #ifndef parser
 #define parser
 
+#include "io.h"
 #include "entity.h"
 #include <vector>
 #include <string>
@@ -10,13 +11,10 @@ typedef struct MovementData {
     std::vector<double> frames;
 } MovementData;
 
-class Parameter {
-public:
+typedef struct Parameter {
     unsigned int m, k, p;
     double r, cs;
-};
-
-class Arguments;
+} Parameter;
 
 MovementData parse_data(const std::string&, const std::string&);
 Parameter parse_arguments(const Arguments&);

@@ -7,7 +7,7 @@
 #include <string>
 
 /**
- * Parameters to be used when identifying rombongan from trajectory data.
+ * User inputs
  */
 typedef struct Arguments {
     std::string source;
