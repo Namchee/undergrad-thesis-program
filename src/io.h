@@ -6,6 +6,9 @@
 #include <vector>
 #include <string>
 
+struct Rombongan;
+struct Score;
+
 /**
  * User inputs
  */

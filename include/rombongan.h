@@ -12,7 +12,7 @@ typedef struct Rombongan {
     }
 } Rombongan;
 
-class Parameter;
+struct Parameter;
 
 std::vector<Rombongan> identify_rombongan(
     const std::vector<Entity>& entities,

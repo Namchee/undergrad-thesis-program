@@ -4,6 +4,8 @@
 #include "rombongan.h"
 #include <vector>
 
+struct Rombongan;
+
 typedef struct Score {
     double precision, recall, f1_score;
 } Score;

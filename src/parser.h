@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 
+struct Arguments;
+
 typedef struct MovementData {
     std::vector<Entity> entities;
     std::vector<double> frames;

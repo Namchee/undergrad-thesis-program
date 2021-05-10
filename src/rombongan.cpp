@@ -318,6 +318,7 @@ std::vector<Rombongan> identify_rombongan(
 
         for (size_t curr_itr = 0; curr_itr < entities.size() - 1; curr_itr++) {
             Entity curr = entities[curr_itr];
+            std::cout << "Start processing " << curr.id << std::endl;
 
             if (!on_interval(curr, { start, end })) {
                 continue;
@@ -365,6 +366,8 @@ std::vector<Rombongan> identify_rombongan(
                     current_rombongan.push_back(group_ids[itr_group]);
                 }
             }
+
+            std::cout << "Finished processing " << curr.id << std::endl;
         }
 
         if (current_rombongan.size() > 0) {
