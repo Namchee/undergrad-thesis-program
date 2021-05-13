@@ -17,29 +17,6 @@ typedef std::unordered_map<unsigned int, std::vector<std::vector<double> > > tra
 typedef std::unordered_map<unsigned int, std::vector<double> > direction_map;
 typedef std::map<std::vector<unsigned int>, std::vector<std::pair<unsigned int, unsigned int> > > rombongan_lifespan;
 
-/**
- * Determine is a list is a imperfect sublist of another.
- *
- * @param a - first list
- * @param b - second list
- * @return `true` if a list is a imperfect sublist of another,
- * `false` otherwise
- */
-bool is_sublist(
-    const std::vector<unsigned int>& a,
-    const std::vector<unsigned int>& b
-) {
-    std::set<unsigned int> temp_container;
-    temp_container.insert(a.begin(), a.end());
-    temp_container.insert(b.begin(), b.end());
-
-    return a.size() != b.size() &&
-        (
-            temp_container.size() == a.size() ||
-            temp_container.size() == b.size()
-        );
-}
-
 bool on_interval(
     const Entity& target_entity,
     const std::pair<unsigned int, unsigned int>& interval
@@ -56,102 +33,6 @@ bool on_interval(
     }
 
     return true;
-}
-
-/**
- * Merge similar duration from child to parent, a.k.a deleting it
- * 
- * @param parent parent duration
- * @param child child duration
- * @param p time period
- */
-void deduplicate(
-    std::vector<std::pair<unsigned int, unsigned int> >& parent,
-    std::vector<std::pair<unsigned int, unsigned int> >& child,
-    unsigned int p
-) {
-    std::vector<std::pair<unsigned int, unsigned int> > deleted;
-
-    for (size_t parent_itr = 0; parent_itr < parent.size(); parent_itr++) {
-        std::pair<unsigned int, unsigned int> parent_duration = parent[parent_itr];
-
-        for (size_t child_itr = 0; child_itr < child.size(); child_itr++) {
-            std::pair<unsigned int, unsigned int> child_duration = child[child_itr];
-
-            if (
-                (parent_duration == child_duration) ||
-                (abs((int)parent_duration.first - (int)child_duration.first) <= p) ||
-                (abs((int)parent_duration.second - (int)child_duration.second) <= p)
-            ) {
-                deleted.push_back(child_duration);
-            }
-        }
-    }
-
-    for (size_t del_itr = 0; del_itr < deleted.size() && child.size() > 0; del_itr++) {
-        std::vector<std::pair<unsigned int, unsigned int> >::iterator position = std::find(
-            child.begin(),
-            child.end(),
-            deleted[del_itr]
-        );
-
-        if (position != child.end()) {
-            child.erase(position);
-        }
-    }
-}
-
-/**
- * Clean rombongan identification result by merging
- * sub-rombongan into parent rombongan.
- * 
- * @param raw_result raw idenfication result
- * @param p time period
- * @return cleaned identification result
- */
-std::vector<Rombongan> merge_rombongan(
-    std::vector<Rombongan>& raw_result,
-    double p
-) {
-    std::sort(raw_result.begin(), raw_result.end());
-
-    for (size_t curr_itr = 0; curr_itr < raw_result.size() - 1; curr_itr++) {
-        if (raw_result[curr_itr].duration.size() == 0) {
-            continue;
-        }
-
-        for (size_t other_itr = curr_itr + 1; other_itr < raw_result.size(); other_itr++) {
-            if (raw_result[other_itr].duration.size() == 0) {
-                continue;
-            }
-
-            if (is_sublist(raw_result[curr_itr].members, raw_result[other_itr].members)) {
-                deduplicate(
-                    raw_result[curr_itr].duration,
-                    raw_result[other_itr].duration,
-                    p
-                );
-            }
-        }
-    }
-
-    std::vector<Rombongan> clean_result;
-
-    for (auto member: raw_result) {
-        if (member.duration.size() > 0) {
-            clean_result.push_back(member);
-        }
-    }
-
-    sort(
-        clean_result.begin(),
-        clean_result.end(),
-        [](const Rombongan& a, const Rombongan& b) -> bool {
-            return a.duration[0].first < b.duration[0].first;
-        }
-    );
-
-    return clean_result;
 }
 
 /**
@@ -247,13 +128,7 @@ void extend_current_rombongan(
         }
 
         if (is_similar_to_all_members) {
-            std::vector new_group = std::vector<unsigned int>(
-                groups[groups_itr].begin(),
-                groups[groups_itr].end()
-            );
-
-            new_group.push_back(other.id);
-            groups.push_back(new_group);
+            groups[groups_itr].push_back(other.id);
         }
     }
 }
@@ -302,7 +177,7 @@ std::vector<Rombongan> identify_rombongan(
     
     unsigned int frame_count = entities[0].trajectories.size();
 
-    for (size_t end = k; end < frame_count; end++) {    
+    for (size_t end = k; end < frame_count; end++) {
         unsigned int start = end - k;
 
         std::vector<std::vector<unsigned int> > current_rombongan;
@@ -318,7 +193,6 @@ std::vector<Rombongan> identify_rombongan(
 
         for (size_t curr_itr = 0; curr_itr < entities.size() - 1; curr_itr++) {
             Entity curr = entities[curr_itr];
-            std::cout << "Start processing " << curr.id << std::endl;
 
             if (!on_interval(curr, { start, end })) {
                 continue;
@@ -366,8 +240,6 @@ std::vector<Rombongan> identify_rombongan(
                     current_rombongan.push_back(group_ids[itr_group]);
                 }
             }
-
-            std::cout << "Finished processing " << curr.id << std::endl;
         }
 
         if (current_rombongan.size() > 0) {
@@ -391,5 +263,5 @@ std::vector<Rombongan> identify_rombongan(
         });
     }
 
-    return merge_rombongan(raw_result, params.p);
+    return raw_result;
 }

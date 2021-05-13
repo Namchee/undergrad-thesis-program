@@ -1,0 +1,12 @@
+data, m, k, r, theta
+gveii_prune, 2, 2, 0.075, 5
+
+precision, recall, f1_score
+0.6, 0.014, 0.028
+
+members, duration
+1 2, 12-31
+2 3, 12-31
+3 4, 12-31
+4 5, 12-31
+5 6, 3-23 10-31
