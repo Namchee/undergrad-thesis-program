@@ -90,6 +90,10 @@ Score calculate_score(
     double recall = calculate_recall(expected_result, result_ids);
     double f1_score = 2 * (precision * recall) / (precision + recall);
 
+    if (std::isnan(f1_score)) {
+        f1_score = 0;
+    }
+
     return {
         precision,
         recall,
