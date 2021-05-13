@@ -1,6 +1,7 @@
 #include "eval.h"
 #include "rombongan.h"
 #include <vector>
+#include <cmath>
 #include <algorithm>
 
 /**
