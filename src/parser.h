@@ -14,7 +14,7 @@ typedef struct MovementData {
 } MovementData;
 
 typedef struct Parameter {
-    unsigned int m, k, p;
+    unsigned int m, k;
     double r, cs;
 } Parameter;
 

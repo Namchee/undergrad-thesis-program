@@ -42,7 +42,9 @@ double calculate_precision(
             fp++;
     }
 
-    return tp / (tp + fp);
+    double precision = tp / (tp + fp);
+
+    return std::isnan(precision) ? 0 : precision;
 }
 
 /**
@@ -66,7 +68,9 @@ double calculate_recall(
             fn++;
     }
 
-    return tp / (tp + fn);
+    double recall = tp / (tp + fn);
+
+    return std::isnan(recall) ? 0 : recall;
 }
 
 /**

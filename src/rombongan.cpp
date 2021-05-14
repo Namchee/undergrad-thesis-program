@@ -8,10 +8,9 @@
 #include <vector>
 #include <set>
 #include <unordered_map>
-#include <unordered_set>
 #include <algorithm>
-#include <map>
 #include <iostream>
+#include <map>
 
 typedef std::unordered_map<unsigned int, std::vector<std::vector<double> > > trajectory_map;
 typedef std::unordered_map<unsigned int, std::vector<double> > direction_map;
@@ -168,8 +167,8 @@ std::vector<Rombongan> identify_rombongan(
     const std::vector<Entity>& entities,
     const Parameter& params
 ) {
-    int m = params.m;
-    int k = params.k;
+    unsigned int m = params.m;
+    unsigned int k = params.k;
     double r = params.r;
     double cs = params.cs;
 

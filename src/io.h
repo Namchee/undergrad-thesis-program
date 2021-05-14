@@ -19,7 +19,6 @@ typedef struct Arguments {
     double interval;
     double range;
     double angle;
-    double fps;
 } Arguments;
 
 Arguments read_arguments(int, char *[]);

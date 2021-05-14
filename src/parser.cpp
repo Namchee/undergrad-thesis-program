@@ -119,10 +119,9 @@ Parameter parse_arguments(
     Parameter params;
 
     params.m = args.entities;
-    params.k = round(args.interval * args.fps);
-    params.r = args.range * args.interval * args.fps;
+    params.k = std::ceil(args.interval);
+    params.r = args.range * args.interval;
     params.cs = cos(args.angle * PI / 180);
-    params.p = ceil(args.fps);
 
     return params;
 }

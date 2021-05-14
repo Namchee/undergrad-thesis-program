@@ -24,18 +24,13 @@ Arguments read_arguments(int argc, char *argv[]) {
         .help("Nama berkas text dari sumber data yang ingin digunakan")
         .required();
 
-    program.add_argument("fps")
-        .help("Jumlah frame per detik")
-        .required()
-        .action([](const std::string &value) { return std::stod(value); });
-
     program.add_argument("entities")
         .help("Jumlah entitas minimum anggota rombongan")
         .required()
         .action([](const std::string &value) { return std::stoi(value); });
     
     program.add_argument("interval")
-        .help("Interval waktu minimum pergerakan bersama secara konsekutif dalam detik")
+        .help("Interval waktu minimum pergerakan bersama secara konsekutif dalam satuan frame")
         .required()
         .action([](const std::string &value) { return std::stod(value); });
 
@@ -96,13 +91,6 @@ Arguments read_arguments(int argc, char *argv[]) {
     }
 
     auto angle = program.get<double>("angle");
-    auto fps = program.get<double>("fps");
-
-    if (fps <= 0) {
-        throw std::invalid_argument(
-            "Nilai frame per second harus merupakan bilangan positif"
-        );
-    }
 
     auto path = program.get<std::string>("--path");
 
@@ -114,7 +102,6 @@ Arguments read_arguments(int argc, char *argv[]) {
     p.range = range;
     p.angle = angle;
     p.path = path;
-    p.fps = fps;
 
     return p;
 }
