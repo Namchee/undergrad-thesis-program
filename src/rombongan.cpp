@@ -222,9 +222,10 @@ void extend_current_rombongan(
 ) {
     double r = params.r;
     double cs = params.cs;
+    unsigned int m = params.m;
 
     for (size_t groups_itr = 0; groups_itr < groups.size(); groups_itr++) {
-        bool is_similar_to_all_members = false;
+        unsigned int similarity_count = 0;
 
         for (size_t member_itr = 0; member_itr < groups[groups_itr].size(); member_itr++) {
             unsigned int member_id = groups[groups_itr][member_itr];
@@ -246,16 +247,24 @@ void extend_current_rombongan(
             // make sure that the distance is not zero to avoid
             // similarity checking when two entities
             // doesn't appear in the current timeframe.
-            is_similar_to_all_members = !std::isnan(dtw_distance) &&
+            similarity_count += !std::isnan(dtw_distance) &&
                 dtw_distance <= r &&
                 cosine_similarity >= cs;
 
-            if (is_similar_to_all_members) {
+            // if it's similar to at least m entites
+            // or to all members, it's a new member
+            if (
+                similarity_count == groups[groups_itr].size() ||
+                similarity_count >= 1
+            ) {
                 break;
             }
         }
 
-        if (is_similar_to_all_members) {
+        if (
+            similarity_count == groups[groups_itr].size() ||
+            similarity_count >= 1
+        ) {
             groups[groups_itr].push_back(other.id);
         }
     }
