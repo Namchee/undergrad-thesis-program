@@ -1,7 +1,0 @@
-data, m, k, r, theta
-seq_eth, 2, 105, 1.85, 11.25
-
-precision, recall, f1_score
--nan, 0, 0
-
-members, duration

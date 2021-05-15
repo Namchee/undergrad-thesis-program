@@ -164,7 +164,7 @@ void write_result(
         std::streamsize ss = std::cout.precision();
 
         file_stream << "precision, recall, f1_score" << std::endl;
-        file_stream << std::setprecision(2);
+        file_stream << std::setprecision(3);
         file_stream << precision << ", ";
         file_stream << recall << ", ";
         file_stream << f1_score;

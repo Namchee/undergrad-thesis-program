@@ -16,6 +16,38 @@ typedef std::unordered_map<unsigned int, std::vector<std::vector<double> > > tra
 typedef std::unordered_map<unsigned int, std::vector<double> > direction_map;
 typedef std::map<std::vector<unsigned int>, std::vector<std::pair<unsigned int, unsigned int> > > rombongan_lifespan;
 
+/**
+ * Determine is a list is a imperfect sublist of another.
+ *
+ * @param a - first list
+ * @param b - second list
+ * @return `true` if a list is a imperfect sublist of another,
+ * `false` otherwise
+ */
+bool is_sublist(
+    const std::vector<unsigned int>& a,
+    const std::vector<unsigned int>& b
+) {
+    std::set<unsigned int> temp_container;
+    temp_container.insert(a.begin(), a.end());
+    temp_container.insert(b.begin(), b.end());
+
+    return a.size() != b.size() &&
+        (
+            temp_container.size() == a.size() ||
+            temp_container.size() == b.size()
+        );
+}
+
+/**
+ * Determine if an entity is present on a time interval
+ * 
+ * @param target_entity - target entity
+ * @param interval - time interval
+ * 
+ * @return `true` if target is present in all timestamps,
+ * `false` otherwise.
+ */
 bool on_interval(
     const Entity& target_entity,
     const std::pair<unsigned int, unsigned int>& interval
@@ -33,6 +65,100 @@ bool on_interval(
 
     return true;
 }
+
+/**
+ * Merge similar duration from child to parent, a.k.a deleting it
+ * 
+ * @param parent parent duration
+ * @param child child duration
+ */
+void deduplicate_duration(
+    std::vector<std::pair<unsigned int, unsigned int> >& parent,
+    std::vector<std::pair<unsigned int, unsigned int> >& child
+) {
+    std::vector<std::pair<unsigned int, unsigned int> > deleted;
+
+    for (size_t parent_itr = 0; parent_itr < parent.size(); parent_itr++) {
+        std::pair<unsigned int, unsigned int> parent_duration = parent[parent_itr];
+
+        for (size_t child_itr = 0; child_itr < child.size(); child_itr++) {
+            std::pair<unsigned int, unsigned int> child_duration = child[child_itr];
+
+            if (
+                (parent_duration == child_duration) ||
+                (child_duration.first > parent_duration.first && child_duration.second < parent_duration.second)
+            ) {
+                deleted.push_back(child_duration);
+            }
+        }
+    }
+
+    for (size_t del_itr = 0; del_itr < deleted.size() && child.size() > 0; del_itr++) {
+        auto position = std::find(
+            child.begin(),
+            child.end(),
+            deleted[del_itr]
+        );
+
+        if (position != child.end()) {
+            child.erase(position);
+        }
+    }
+}
+
+/**
+ * Clean rombongan identification result by merging
+ * sub-rombongan into parent rombongan.
+ * 
+ * @param raw_result raw idenfication result
+ *
+ * @return cleaned identification result
+ */
+std::vector<Rombongan> deduplicate(
+    std::vector<Rombongan>& raw_result
+) {
+    std::sort(raw_result.begin(), raw_result.end());
+
+    for (size_t curr_itr = 0; curr_itr < raw_result.size() - 1; curr_itr++) {
+        if (raw_result[curr_itr].duration.size() == 0) {
+            continue;
+        }
+
+        for (size_t other_itr = curr_itr + 1; other_itr < raw_result.size(); other_itr++) {
+            if (raw_result[other_itr].duration.size() == 0) {
+                continue;
+            }
+
+            if (
+                is_sublist(raw_result[curr_itr].members, raw_result[other_itr].members)
+            ) {
+                deduplicate_duration(
+                    raw_result[curr_itr].duration,
+                    raw_result[other_itr].duration
+                );
+            }
+        }
+    }
+
+    std::vector<Rombongan> clean_result;
+
+    for (auto member: raw_result) {
+        if (member.duration.size() > 0) {
+            clean_result.push_back(member);
+        }
+    }
+
+    sort(
+        clean_result.begin(),
+        clean_result.end(),
+        [](const Rombongan& a, const Rombongan& b) -> bool {
+            return a.duration[0].first < b.duration[0].first;
+        }
+    );
+
+    return clean_result;
+}
+
 
 /**
  * Get sub trajectories from all entities for a time interval
@@ -98,10 +224,14 @@ void extend_current_rombongan(
     double cs = params.cs;
 
     for (size_t groups_itr = 0; groups_itr < groups.size(); groups_itr++) {
-        bool is_similar_to_all_members = true;
+        bool is_similar_to_all_members = false;
 
         for (size_t member_itr = 0; member_itr < groups[groups_itr].size(); member_itr++) {
             unsigned int member_id = groups[groups_itr][member_itr];
+
+            if (member_id == other.id) {
+                continue;
+            }
         
             double dtw_distance = calculate_dtw_distance(
                 sub_trajectories[other.id],
@@ -116,14 +246,13 @@ void extend_current_rombongan(
             // make sure that the distance is not zero to avoid
             // similarity checking when two entities
             // doesn't appear in the current timeframe.
-            is_similar_to_all_members = member_id != other.id && 
-                !std::isnan(dtw_distance) &&
+            is_similar_to_all_members = !std::isnan(dtw_distance) &&
                 dtw_distance <= r &&
                 cosine_similarity >= cs;
 
-                if (!is_similar_to_all_members) {
-                    break;
-                }
+            if (is_similar_to_all_members) {
+                break;
+            }
         }
 
         if (is_similar_to_all_members) {
@@ -156,6 +285,32 @@ void extend_rombongan_duration(
             };
         }
     }
+}
+
+/**
+ * Determine if a rombongan candidate is not a subrombongan
+ * of another
+ * 
+ * @param candidate - candidate rombongan
+ * @param groups - list of identified rombongan
+ * 
+ * @return `true` if candidate is not a subrombongan,
+ * `false` otherwise
+ */
+bool is_new_rombongan(
+    const std::vector<unsigned int>& candidate,
+    const std::vector<std::vector<unsigned int> >& groups
+) {
+    for (size_t group_itr = 0; group_itr < groups.size(); group_itr++) {
+        if (
+            groups[group_itr].size() > candidate.size() &&
+            is_sublist(groups[group_itr], candidate)
+        ) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /**
@@ -228,7 +383,8 @@ std::vector<Rombongan> identify_rombongan(
                 if (
                     !std::isnan(dtw_distance) &&
                     dtw_distance <= r &&
-                    cosine_similarity >= cs
+                    cosine_similarity >= cs &&
+                    is_new_rombongan({ curr.id, other.id }, group_ids)
                 ) {
                     group_ids.push_back({ curr.id, other.id });
                 }
@@ -262,5 +418,5 @@ std::vector<Rombongan> identify_rombongan(
         });
     }
 
-    return raw_result;
+    return deduplicate(raw_result);
 }

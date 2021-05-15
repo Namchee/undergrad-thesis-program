@@ -1,7 +1,0 @@
-data, m, k, r, theta
-gveii_prune, 2, 2, 0.065, 5
-
-precision, recall, f1_score
--nan, 0, -nan
-
-members, duration
