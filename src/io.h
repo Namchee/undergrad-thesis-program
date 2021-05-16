@@ -16,6 +16,7 @@ typedef struct Arguments {
     std::string source;
     std::string path;
     unsigned int entities;
+    unsigned int closeness;
     double interval;
     double range;
     double angle;

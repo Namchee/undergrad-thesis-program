@@ -43,6 +43,11 @@ Arguments read_arguments(int argc, char *argv[]) {
         .help("Beda sudut maksimum antar entitas dalam rombongan dalam derajat")
         .required()
         .action([](const std::string &value) { return std::stod(value); });
+    
+    program.add_argument("closeness")
+        .help("Jumlah entitas minimum yang dekat agar dapat tergabung dalam rombongan")
+        .required()
+        .action([](const std::string &value) { return std::stoi(value); });
 
     program.add_argument("-p", "--path")
         .help("Direktori sumber data lintasan. Relatif terhadap direktori saat ini.")
@@ -92,12 +97,21 @@ Arguments read_arguments(int argc, char *argv[]) {
 
     auto angle = program.get<double>("angle");
 
+    auto closeness = program.get<int>("closeness");
+
+    if (closeness < 0) {
+        throw std::invalid_argument(
+            "Jumlah entitas minimum yang dekat harus merupakan bilangan tak negatif"
+        );
+    }
+
     auto path = program.get<std::string>("--path");
 
     Arguments p;
 
     p.source = data;
     p.entities = entities;
+    p.closeness = closeness;
     p.interval = interval;
     p.range = range;
     p.angle = angle;

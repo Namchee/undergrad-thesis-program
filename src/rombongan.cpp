@@ -226,8 +226,9 @@ void extend_current_rombongan(
 
     for (size_t groups_itr = 0; groups_itr < groups.size(); groups_itr++) {
         unsigned int similarity_count = 0;
+        unsigned int limit = params.c == 0 ? groups[groups_itr].size() : params.c;
 
-        for (size_t member_itr = 0; member_itr < groups[groups_itr].size(); member_itr++) {
+        for (size_t member_itr = 0; member_itr < groups[groups_itr].size() && similarity_count < limit; member_itr++) {
             unsigned int member_id = groups[groups_itr][member_itr];
 
             if (member_id == other.id) {
@@ -250,26 +251,22 @@ void extend_current_rombongan(
             similarity_count += !std::isnan(dtw_distance) &&
                 dtw_distance <= r &&
                 cosine_similarity >= cs;
-
-            // if it's similar to at least m entites
-            // or to all members, it's a new member
-            if (
-                similarity_count == groups[groups_itr].size() ||
-                similarity_count >= 2
-            ) {
-                break;
-            }
         }
 
-        if (
-            similarity_count == groups[groups_itr].size() ||
-            similarity_count >= 2
-        ) {
+        if (similarity_count >= limit) {
             groups[groups_itr].push_back(other.id);
         }
     }
 }
 
+/**
+ * Extend identified rombongan duration by either appending
+ * or replacing duration pairs
+ * 
+ * @param groups - list of identified rombongan
+ * @param current_groups - list of newly identified rombongan
+ * @param interval - time interval
+ */
 void extend_rombongan_duration(
     rombongan_lifespan& groups,
     std::vector<std::vector<unsigned int> >& current_groups,

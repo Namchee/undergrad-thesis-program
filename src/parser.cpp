@@ -14,6 +14,7 @@
 #include <map>
 #include <stdexcept>
 
+// PI hack
 const double PI = std::acos(-1);
 
 typedef std::map<double, std::unordered_map<unsigned int, std::vector<double> > > frame_to_entity;
@@ -119,6 +120,7 @@ Parameter parse_arguments(
     Parameter params;
 
     params.m = args.entities;
+    params.c = args.closeness;
     params.k = std::ceil(args.interval);
     params.r = args.range * args.interval;
     params.cs = cos(args.angle * PI / 180);
