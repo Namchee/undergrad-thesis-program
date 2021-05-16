@@ -255,7 +255,7 @@ void extend_current_rombongan(
             // or to all members, it's a new member
             if (
                 similarity_count == groups[groups_itr].size() ||
-                similarity_count >= 1
+                similarity_count >= 2
             ) {
                 break;
             }
@@ -263,7 +263,7 @@ void extend_current_rombongan(
 
         if (
             similarity_count == groups[groups_itr].size() ||
-            similarity_count >= 1
+            similarity_count >= 2
         ) {
             groups[groups_itr].push_back(other.id);
         }
