@@ -1,5 +1,5 @@
 data, m, k, r, theta
-gveii, 2, 17, 0.8, 11.25
+gveii, 2, 17, 1, 11.25
 
 precision, recall, f1_score
 0.219, 0.894, 0.351
