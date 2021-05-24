@@ -117,6 +117,10 @@ void deduplicate_duration(
 std::vector<Rombongan> deduplicate(
     std::vector<Rombongan>& raw_result
 ) {
+    if (raw_result.size() == 0) {
+        return raw_result;
+    }
+
     std::sort(raw_result.begin(), raw_result.end());
 
     for (size_t curr_itr = 0; curr_itr < raw_result.size() - 1; curr_itr++) {
@@ -136,6 +140,8 @@ std::vector<Rombongan> deduplicate(
                     raw_result[curr_itr].duration,
                     raw_result[other_itr].duration
                 );
+
+                
             }
         }
     }
