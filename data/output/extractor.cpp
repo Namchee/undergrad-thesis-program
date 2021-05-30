@@ -3,21 +3,29 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <set>
+#include <algorithm>
 #include <string>
 
 int main() {
     std::string temp, linee, mem, dur, a;
+
+    std::vector<std::string> filenames;
 
     for (const auto& entry: std::filesystem::directory_iterator(std::filesystem::current_path())) {
         std::string name_string = entry.path().filename().string();
 
         if (
             name_string.find("simp") != std::string::npos ||
+            name_string.find("jawaban") != std::string::npos || 
             entry.path().extension() != ".txt" ||
             entry.is_directory()
         ) {
             continue;
         }
+
+        std::string delim = "-";
+        std::string input_file = name_string.substr(0, name_string.find("-"));
 
         std::ifstream in_stream(entry.path());
 
@@ -25,7 +33,9 @@ int main() {
             .make_preferred()
             .replace_extension(".txt");
         std::vector<std::vector<unsigned int> > romb;
-        std::vector<std::pair<unsigned int, unsigned int> > dura;
+        std::vector<std::vector<std::pair<unsigned int, unsigned int> > > dura;
+
+        filenames.push_back(entry.path().stem().string() + "-simp");
 
         if (in_stream.good() && in_stream.is_open()) {
             std::getline(in_stream, temp);
@@ -52,9 +62,13 @@ int main() {
                     rombongan.push_back(std::stoul(mem));
                 }
 
+                romb.push_back(rombongan);
+
                 std::getline(liner, linee);
 
                 std::stringstream dura_ss(linee);
+
+                std::vector<std::pair<unsigned int, unsigned int> > rom_dur;
 
                 while (dura_ss >> dur) {
                     auto pos = dur.find('-');
@@ -62,9 +76,10 @@ int main() {
                     auto first = dur.substr(0, pos);
                     auto second = dur.substr(pos + 1);
 
-                    romb.push_back(rombongan);
-                    dura.push_back({ std::stoul(first), std::stoul(second) });
+                    rom_dur.push_back({ std::stoul(first), std::stoul(second) });
                 }
+
+                dura.push_back(rom_dur);
             }
 
             std::ofstream out_stream;
@@ -87,13 +102,37 @@ int main() {
                     }
 
                     out_stream << std::endl;
-                    out_stream << dura[itr].first << " " << dura[itr].second << std::endl;
+
+                    for (size_t j = 0; j < dura[itr].size(); j++) {
+                        out_stream << dura[itr][j].first << " " << dura[itr][j].second << " ";
+                    }
+                    
+                    out_stream << std::endl;
                 }
 
                 out_stream.close();
             }
         }
     }
+
+    auto files_path = (std::filesystem::current_path() / "jawaban")
+        .make_preferred()
+        .replace_extension(".txt");
+
+    std::ofstream files;
+
+    files.open(
+        files_path,
+        std::ofstream::out | std::ofstream::trunc
+    );
+
+    if (files.good() && files.is_open()) {
+        for (auto x: filenames) {
+            files << x << ".txt" << std::endl;
+        }
+    }
+
+    files.close();
 
     return 0;
 }
