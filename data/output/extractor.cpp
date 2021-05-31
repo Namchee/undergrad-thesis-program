@@ -76,7 +76,15 @@ int main() {
                     auto first = dur.substr(0, pos);
                     auto second = dur.substr(pos + 1);
 
-                    rom_dur.push_back({ std::stoul(first), std::stoul(second) });
+                    unsigned int first_val = std::stoul(first);
+                    unsigned int second_val = std::stoul(second);
+
+                    if (name_string.find("seq_eth") != std::string::npos) {
+                        first_val -= 780;
+                        second_val -= 780;
+                    }
+
+                    rom_dur.push_back({ first_val, second_val });
                 }
 
                 dura.push_back(rom_dur);
