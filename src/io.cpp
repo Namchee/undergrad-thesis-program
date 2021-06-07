@@ -167,12 +167,13 @@ void write_result(
 
     if (file_stream.is_open()) {
         // write the parameters in csv-like format
-        file_stream << "data, m, k, r, theta" << std::endl;
+        file_stream << "data, m, k, r, theta, n" << std::endl;
         file_stream << args.source << ", ";
         file_stream << args.entities << ", ";
         file_stream << args.interval << ", ";
         file_stream << args.range << ", ";
-        file_stream << args.angle;
+        file_stream << args.angle << ", ";
+        file_stream << args.closeness;
         file_stream << std::endl << std::endl;
 
         std::streamsize ss = std::cout.precision();
