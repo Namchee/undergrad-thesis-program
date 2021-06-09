@@ -62,6 +62,11 @@ Arguments read_arguments(int argc, char *argv[]) {
                 .string();
         });
 
+    program.add_argument("-r", "--redundant")
+        .help("Menentukan apakah rombongan redundan disimpan atau tidak")
+        .default_value(false)
+        .implicit_value(true);
+
     try {
         program.parse_args(argc, argv);
     } catch (const std::runtime_error &err) {
@@ -105,7 +110,8 @@ Arguments read_arguments(int argc, char *argv[]) {
         );
     }
 
-    auto path = program.get<std::string>("--path");
+    auto path = program.get<std::string>("-p");
+    auto redundancy = program.get<bool>("-r");
 
     Arguments p;
 
@@ -116,6 +122,7 @@ Arguments read_arguments(int argc, char *argv[]) {
     p.range = range;
     p.angle = angle;
     p.path = path;
+    p.redundant = redundancy;
 
     return p;
 }

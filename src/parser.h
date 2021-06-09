@@ -16,6 +16,7 @@ typedef struct MovementData {
 typedef struct Parameter {
     unsigned int m, k, c;
     double r, cs;
+    bool redundant;
 } Parameter;
 
 MovementData parse_data(const std::string&, const std::string&);

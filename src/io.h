@@ -20,6 +20,7 @@ typedef struct Arguments {
     double interval;
     double range;
     double angle;
+    bool redundant;
 } Arguments;
 
 Arguments read_arguments(int, char *[]);

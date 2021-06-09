@@ -124,6 +124,7 @@ Parameter parse_arguments(
     params.k = std::ceil(args.interval);
     params.r = args.range * args.interval;
     params.cs = cos(args.angle * PI / 180);
+    params.redundant = args.redundant;
 
     return params;
 }

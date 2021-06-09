@@ -430,5 +430,5 @@ std::vector<Rombongan> identify_rombongan(
         });
     }
 
-    return deduplicate(raw_result);
+    return params.redundant ? raw_result : deduplicate(raw_result);
 }
