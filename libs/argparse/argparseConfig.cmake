@@ -50,7 +50,31 @@ add_library(argparse::argparse INTERFACE IMPORTED)
 
 set_target_properties(argparse::argparse PROPERTIES
   INTERFACE_COMPILE_FEATURES "cxx_std_17"
+<<<<<<< HEAD
   INTERFACE_INCLUDE_DIRECTORIES "/root/undergrad-thesis-program/libs/argparse/include"
+=======
+<<<<<<< HEAD
+  INTERFACE_INCLUDE_DIRECTORIES "/root/undergrad-thesis-program/libs/argparse/include"
+=======
+<<<<<<< HEAD
+  INTERFACE_INCLUDE_DIRECTORIES "/root/undergrad-thesis-program/libs/argparse/include"
+=======
+<<<<<<< HEAD
+  INTERFACE_INCLUDE_DIRECTORIES "/root/undergrad-thesis-program/libs/argparse/include"
+=======
+<<<<<<< HEAD
+  INTERFACE_INCLUDE_DIRECTORIES "/root/undergrad-thesis-program/libs/argparse/include"
+=======
+<<<<<<< HEAD
+  INTERFACE_INCLUDE_DIRECTORIES "/home/namchee/undergrad-thesis-program/libs/argparse/include"
+=======
+  INTERFACE_INCLUDE_DIRECTORIES "/root/undergrad-thesis-program/libs/argparse/include"
+>>>>>>> e20a75f9fa4d82f7a8feae93539b534b53646bd9
+>>>>>>> fe17369e42e9f0e44ecc236fcc8eb3c7c8f5a91d
+>>>>>>> db155008e32ac04d88763dedb0c6ad830b46c68c
+>>>>>>> b3fdbae4f5b94772e142a4c0bf99d8c079baa0aa
+>>>>>>> fa9226b0df8619137c75b9f0adf5d2d6f6d82bd5
+>>>>>>> 4aebb8e2a19c5021df06dff249a69957deb4faf7
 )
 
 # This file does not depend on other imported targets which have
