@@ -219,6 +219,15 @@ direction_map get_directional_vectors(
     return directional_vectors;
 }
 
+/**
+ * Extends a rombongan duration
+ * 
+ * @param groups list of possible rombongan
+ * @param other tested entity
+ * @param sub_trajectories List of sub trajectories for the current time interval
+ * @param direction_vector List of directional vectors for the current time interval
+ * @param params Identification parameters
+ */
 void extend_current_rombongan(
     std::vector<std::vector<unsigned int> >& groups,
     const Entity& other,
